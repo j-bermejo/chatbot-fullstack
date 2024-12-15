@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  # Servicio para el Backend de Django
+  backend:
+    build: ./backend  # Carpeta donde se encuentra tu código Django
+    command: py manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app  # Monta el código de backend en el contenedor
+    ports:
+      - "8000:8000"  # Expone el puerto 8000 para Django
+    depends_on:
+      - db  # Asegúrate de que la base de datos esté disponible antes de iniciar el backend
+    environment:
+      - DB_HOST=db
+      - DB_NAME=chatbot_db
+      - DB_USER=postgres
+      - DB_PASSWORD=3511
+      - DB_PORT=5432
+
+  # Servicio para el Frontend de React
+  frontend:
+    build: ./frontend  # Carpeta donde está tu código React
+    command: npm start  # Inicia el servidor de desarrollo de React
+    volumes:
+      - ./frontend:/app  # Monta el código de frontend en el contenedor
+    ports:
+      - "3000:3000"  # Expone el puerto 3000 para el frontend
+    depends_on:
+      - backend  # Asegúrate de que el backend esté disponible
+
+  # Servicio para la base de datos PostgreSQL
+  db:
+    image: postgres:13  # Usa una imagen oficial de PostgreSQL
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistencia de los datos
+    environment:
+      POSTGRES_DB: chatbot_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "3511"
+    ports:
+      - "5432:5432"  # Expone el puerto de PostgreSQL para la conexión
+
+volumes:
+  postgres_data:  # Volumen para mantener los datos persistentes
+

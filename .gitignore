@@ -1,0 +1,14 @@
+# Entornos virtuales
+venv/
+__pycache__/
+
+# Archivos generados
+*.log
+*.sqlite3
+
+# Configuración de Docker
+*.env
+
+# Node.js
+node_modules/
+build/
